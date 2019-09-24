@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script> 
+    <script src="https://unpkg.com/aframe-animation-component@^3.2.x/dist/aframe-animation-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-layout-component@4.x.x/dist/aframe-layout-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script> 
+    <script>
+      AFRAME.registerComponent('cursor-listener',{
+        init:function(){
+          this.el.addEventListener('click', function(evt){
+          })
+        }
+      }
+    </script>
+    <!-- // what i'm trying to do: clicking a gem creates a random number of new gems
+      // each a tetrahedron (make custom segment/side number later) that are automatically
+      // laid out on the z plane in a cirlce (think layout component) and rotate in the
+      // x or y -z plane slowly around the original gem.
+
+      // registering a custom geometry: https://aframe.io/docs/0.9.0/components/geometry.html-->
+
+      <script>
+        AFRAME.registerComponent('newgem',{
+          schema:{
+            type: 'boolean'
+          }
+          myFunction: function(){
+            //something goes here. is this even necessary when
+            //you could make new gems in the main init stage?
+          }
+
+          
+          init: function() {
+            let numgems = Math.random()*3+1;
+            let gems = [];
+
+// <a-entity id="gems" gem-generator="" mixin="gem" material="" geometry="" animation__spininplace="dur: 6000; easing: linear; loop: NaN; property: rotation; to: 0 360 0" animation__sizechange="dir: alternate; dur: 3000; easing: linear; from: 1 1 1; loop: NaN; property: scale; pauseEvents: mouseenter; resumeEvents: mouseleave; to: 0.7 0.7 0.7" event-set__mouseenter="[object Object]" event-set__mouseleave="[object Object]" event-set__click="[object Object]" animation=""></a-entity>
+
+            let sceneEl = document.querySelector('a-scene');
+            for (let i = 0; i < numgems; i++){
+              var data = this.data;
+              gems[i] = document.createElement('a-entity');
+              gems[i].setAttribute('id','newgem_'+i.toString());
+              gems[i].setAttribute('geometry',{
+                primitive:'tetrahedron'; radius:'0.1'});
+              }
+            }
+
+              // add events, event listeners. DON'T UNDERSTAND SYNTAX/PARAMETERS
+
+              // copy notes into this new thing --> for now we use dummy brute force data already outlined in mixins
+
+          event-set__mouseenter="material.color: teal"
+          event-set__mouseleave="material.color: white"
+          event-set__click="material.color:tomato; newgem:true"> <!-- 
+
+              trying to apply that mixin
+              gems[i].setAttribute('geometry',{primitive:'tetrahedron', radius:'0.1'},'animation',{spininplace:'property:rotation; dur:6000; to:0 360 0; easing:linear; loop:true', sizechange:'property:scale; dur:3000; from:1 1 1; to:0.7 0.7 0.7; easing:linear; loop:true; dir:alternate; pauseEvents:mouseenter; resumeEvents:mouseleave'})
+              gems[i].addEventListener('click', material.color.setAttribute('yellow'), 'mouseenter', material.color.setAttribute('teal'), 'mouseleave', material.color.setAttribtue('white')); 
+
+              //currently setting animation attributes, brute force, to entity created (newgem)
+
+            }
+          }
+
+          //for disappearing gems
+          remove: function() {
+            this.el.removeObject3D('newgem'); //diff btwn type and component?
+          }
+
+        })
+
+      </script>
+
+  </head>
+
+    <!--     
+    a-frame react?    https://github.com/supermedium/aframe-react
+    mozilla hacks:    https://hacks.mozilla.org/2018/03/immersive-aframe-low-poly/
+    aframe registry:  https://aframe.io/aframe-registry/  
+    aframe docs:      https://aframe.io/docs/0.9.0/introduction/
+    writing comps:    http://ngokevin.com/blog/aframe-component/#what-a-component-looks-like
+    -->
+
+
+<!-- generate gems with randomly chosen colors later -->
+
+  <body> 
+    <a-scene>
+      <a-assets>
+        <a-mixin id="gem" 
+          material="color:white"
+          geometry="primitive:icosahedron; radius:0.1"
+          scale="0.2 0.2 0.2"
+          animation__spininplace="property:rotation; dur:6000; to:0 360 0; easing:linear; loop:true" 
+          animation__sizechange="property:scale; dur:3000; from:1 1 1; to:0.7 0.7 0.7; easing:linear; loop:true; dir:alternate; pauseEvents:mouseenter; resumeEvents:mouseleave"
+          event-set__mouseenter="material.color: teal"
+          event-set__mouseleave="material.color: white"
+          event-set__click="material.color:tomato; newgem:true"> <!-- this needs to involve some kind of cloning thing?? -->
+        </a-mixin>
+      </a-assets>
+
+      <!-- position of testGem: 1.109 -2.371 -0.917 -->
+      <a-entity id="testGem" mixin="gem" position="0.424 1.414 -1.430">
+        <a-light id="test" 
+            type="directional" color="#b7381c" intensity="1" position="1.53037 -0.28729 2.86871" light="castShadow: true" target="#target">
+            <a-entity id="target" position="-1.03346 3.97557 -0.10107"></a-entity>
+          </a-light>
+      </a-entity>
+
+      <a-entity id="testGem2" mixin="gem" position="-1.92178 1.71095 0.73906"></a-entity>
+
+
+
+
+
+
+      <a-obj-model id="cave" src="models/secondcave1.obj" 
+        scale="0.2 0.2 0.2" 
+        position="-0.34802 1.74589 -0.7726" 
+        rotation="4.834044917518756 87.77942604522265 -6.936800025648877" 
+        color="#ebebeb" material="" obj-model="">
+      </a-obj-model>
+
+      <a-entity id="gems" gem-generator></a-entity>
+      <a-entity environment="preset: egypt" dressing="none" visible="" ground="hills"></a-entity> 
+      <a-camera><a-cursor></a-cursor></a-camera>
+    </a-scene>
+  </body>
+</html>
